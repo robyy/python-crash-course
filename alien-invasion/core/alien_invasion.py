@@ -5,6 +5,7 @@ import pygame
 from core.settings import Settings
 from core.ship import Ship
 from core.bullet import Bullet
+from alien import Alien
 
 
 class AlienInvasion:
@@ -28,6 +29,9 @@ class AlienInvasion:
         # Ship constructor needs an instance of AlienInvasion class
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -91,12 +95,23 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+    def _create_fleet(self):
+        """Create the fleet of aliens."""
+        # Make an alien.
+        alien = Alien(self)
+        self.aliens.add(alien)
+
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+
+        # When you call draw() on a group, Pygame draws each element in the group at the position defined by its rect attribute. The
+        # draw() method requires one argument: a surface on which to draw the elements from the group
+        self.aliens.draw(self.screen)
 
         # Make the most recently drawn screen visible.
         pygame.display.flip()
