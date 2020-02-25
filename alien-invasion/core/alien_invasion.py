@@ -4,6 +4,7 @@ import pygame
 
 from core.settings import Settings
 from core.ship import Ship
+from core.bullet import Bullet
 
 
 class AlienInvasion:
@@ -26,12 +27,24 @@ class AlienInvasion:
 
         # Ship constructor needs an instance of AlienInvasion class
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
 
     def run_game(self):
         """Start the main loop for the game."""
         while True:
             self._check_events()
             self.ship.update()
+            # When you call update() on a group, the group automatically calls update() for each sprite in the group. The line
+            # self.bullets.update() calls bullet.update() for each bullet we place in the group bullets.
+            self.bullets.update()
+
+            # Get rid of bullets that have disappeared. When you use a for loop with a list (or a group in Pygame), Python expects that
+            # the list will stay the same length as long as the loop is running. Because we can’t remove items from a list or group
+            # within a for loop, we have to loop over a copy of the group.
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
+
             self._update_screen()
 
     # In Python, a single leading underscore indicates a helper method. Kinda a private method
@@ -58,6 +71,8 @@ class AlienInvasion:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
@@ -66,10 +81,17 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
 
+    def _fire_bullet(self):
+        """Create a new bullet and add it to the bullets group."""
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
 
         # Make the most recently drawn screen visible.
         pygame.display.flip()
