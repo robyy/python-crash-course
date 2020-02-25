@@ -34,17 +34,7 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
-            # When you call update() on a group, the group automatically calls update() for each sprite in the group. The line
-            # self.bullets.update() calls bullet.update() for each bullet we place in the group bullets.
-            self.bullets.update()
-
-            # Get rid of bullets that have disappeared. When you use a for loop with a list (or a group in Pygame), Python expects that
-            # the list will stay the same length as long as the loop is running. Because we can’t remove items from a list or group
-            # within a for loop, we have to loop over a copy of the group.
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom <= 0:
-                    self.bullets.remove(bullet)
-
+            self._update_bullets()
             self._update_screen()
 
     # In Python, a single leading underscore indicates a helper method. Kinda a private method
@@ -86,6 +76,20 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+
+    def _update_bullets(self):
+        """Update position of bullets and get rid of old bullets."""
+        # Update bullet positions.
+        # When you call update() on a group, the group automatically calls update() for each sprite in the group. The line
+        # self.bullets.update() calls bullet.update() for each bullet we place in the group bullets.
+        self.bullets.update()
+
+        # Get rid of bullets that have disappeared. When you use a for loop with a list (or a group in Pygame), Python expects that
+        # the list will stay the same length as long as the loop is running. Because we can’t remove items from a list or group
+        # within a for loop, we have to loop over a copy of the group.
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
