@@ -5,6 +5,7 @@ import pygame
 
 from core.settings import Settings
 from core.game_stats import GameStats
+from core.scoreboard import Scoreboard
 from core.button import Button
 from core.ship import Ship
 from core.bullet import Bullet
@@ -29,9 +30,10 @@ class AlienInvasion:
 
         pygame.display.set_caption("Alien Invasion")
 
-        # Create an instance to store game statistics.
+        # Create an instance to store game statistics, and create a scoreboard.
         # need to create it before defining other game elements, such as the ship.
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         # Ship constructor needs an instance of AlienInvasion class
         self.ship = Ship(self)
@@ -215,6 +217,9 @@ class AlienInvasion:
         # When you call draw() on a group, Pygame draws each element in the group at the position defined by its rect attribute. The
         # draw() method requires one argument: a surface on which to draw the elements from the group
         self.aliens.draw(self.screen)
+
+        # Draw the score information.
+        self.sb.show_score()
 
         # Draw the play button if the game is inactive.
         if not self.stats.game_active:
