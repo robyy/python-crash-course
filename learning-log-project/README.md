@@ -4,7 +4,7 @@
 Python 3.8.1
 Django 3.0.4
 
-### Issue
-For some reason, had to name the project as `config`: `django-admin startproject config .`, and create a module `settings_dev.py`(can copy the content from default `settings.py`), or will always get `ModuleNotFoundError: No module named 'config'` error when `migrate` or `runserver`. Tried to test with lower version of python and django, no luck, might be just my local env issue though.
+### Potential Issue
+Check your local env variable `echo $DJANGO_SETTINGS_MODULE`, if it's set, either remove it or change the name of learning_log and other path to match `$DJANGO_SETTINGS_MODULE`.
 
 Another way to fix it is to specify the settings by: `python manage.py runserver --settings=config.settings` or `DJANGO_SETTINGS_MODULE=config.settings python manage.py runserver`
