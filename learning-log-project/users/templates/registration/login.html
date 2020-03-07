@@ -1,0 +1,21 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<!-- since we include('django.contrib.auth.urls') in urlpatterns, login is the default name provided by Django -->
+<form method="post" action="{% url 'users:login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button name="submit">Log in</button>
+
+  <!--  hidden form element, 'next'; the value argument tells Django where to redirect the user after they’ve logged in successfully. In this case, we send the user back to the home page.  -->
+  <input type="hidden" name="next"
+         value="{% url 'learning_logs:index' %}" />
+</form>
+
+{% endblock content %}
