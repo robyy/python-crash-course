@@ -22,8 +22,13 @@ with open(filename) as f:
 # Plot the high and low temperatures.
 plt.style.use('seaborn')
 fig, ax = plt.subplots()
-ax.plot(dates, highs, c='red')
-ax.plot(dates, lows, c='blue')
+# alpha controls color's transparency, 0 is completely transparent
+ax.plot(dates, highs, c='red', alpha=0.5)
+ax.plot(dates, lows, c='blue', alpha=0.5)
+# The facecolor argument determines the color of the shaded region;
+# we give it a low alpha value of 0.1 so the filled region connects the two data series without
+# distracting from the information they represent
+ax.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
 
 # Format plot.
 ax.set_title("Daily high and low temperatures - 2018", fontsize=24)
